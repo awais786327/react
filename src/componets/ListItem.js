@@ -10,6 +10,14 @@ const ListItems = (props) => {
       <button
         onClick={(ev) => {
           ev.stopPropagation();
+          props.editTask(props.index);
+        }} >
+        edit
+      </button>
+      &nbsp;
+      <button
+        onClick={(ev) => {
+          ev.stopPropagation();
           props.removeTask(props.index)
           }}>
         remove

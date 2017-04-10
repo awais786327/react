@@ -13,6 +13,7 @@ class App extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.addTask = this.addTask.bind(this);
     this.removeTask = this.removeTask.bind(this);
+    this.edit = this.edit.bind(this);
     this.state = {
       tasks : [
         {
@@ -28,7 +29,11 @@ class App extends React.Component {
           completed: false
         }
       ],
-      value: ''
+      value: '',
+      editMode: {
+        edit: false,
+        index: null
+      }
     }
   }
 
@@ -57,33 +62,63 @@ class App extends React.Component {
     });
   }
 
+  edit(index){
+    var editMode = this.state.editMode;
+    var tasks = this.state.tasks;
+    var selectedValue = tasks[index].name;
+
+    tasks[index].name = '';
+    editMode.edit = true;
+    editMode.index = index;
+
+    this.setState({
+      tasks: tasks,
+      value: selectedValue,
+      editMode: editMode
+    });
+
+  }
+
   addTask(ev){
     ev.preventDefault();
 
     let tasks = this.state.tasks;
     let value = this.state.value;
-    tasks.unshift({
-      name: value,
-      completed: false
-    });
 
+    if(this.state.editMode.edit){
+      tasks[this.state.editMode.index].name = value;
+      this.setState({
+        tasks: tasks,
+        value: ''
+      });
+    } else {
+      tasks.unshift({
+        name: value,
+        completed: false
+      });
+
+      this.setState({
+        tasks: tasks,
+        value: ''
+      });
+    }
+
+    /*to reset edit counter*/
+    this.setDefault();
+  }
+
+  setDefault(){
+    var tasks = this.state.tasks;
+    var value = '';
+    var editMode = {
+      edit: false,
+      index: null
+    };
     this.setState({
       tasks: tasks,
-      value: ''
+      value: value,
+      editMode: editMode
     });
-
-    /*********************/
-
-    /* let tasks = this.state.tasks;
-     tasks.push({
-     name: this.state.value,
-     completed: false
-     });
-
-     this.setState({
-     tasks: tasks,
-     value: ''
-     });*/
   }
 
   render() {
@@ -107,6 +142,7 @@ class App extends React.Component {
                 <ListItems
                   key={task.name}
                   removeTask={this.removeTask}
+                  editTask={this.edit}
                   task={task}
                   index={index}
                   clickHandler={this.changeStatus} />
