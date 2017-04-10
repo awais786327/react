@@ -10,6 +10,8 @@ class App extends React.Component {
     super();
 
     this.changeStatus = this.changeStatus.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.addTask = this.addTask.bind(this);
     this.state = {
       tasks : [
         {
@@ -25,8 +27,14 @@ class App extends React.Component {
           completed: false
         }
       ],
-      currentTask: 'test'
+      value: ''
     }
+  }
+
+  onChange(newValue){
+    this.setState({
+      value: newValue.target.value
+    });
   }
 
   changeStatus(index){
@@ -39,6 +47,35 @@ class App extends React.Component {
     });
   }
 
+  addTask(ev){
+    ev.preventDefault();
+
+    let tasks = this.state.tasks;
+    let value = this.state.value;
+    tasks.push({
+      name: value,
+      completed: false
+    });
+
+    this.setState({
+      tasks: tasks,
+      value: ''
+    });
+
+    /*********************/
+
+    /* let tasks = this.state.tasks;
+     tasks.push({
+     name: this.state.value,
+     completed: false
+     });
+
+     this.setState({
+     tasks: tasks,
+     value: ''
+     });*/
+  }
+
   render() {
     return (
       <div>
@@ -47,6 +84,11 @@ class App extends React.Component {
           <h2>React TodoList</h2>
         </div>
         <hr/>
+        <form onSubmit={this.addTask}>
+          <input type="text" value={this.state.value}
+                 onChange={this.onChange}/>
+          <input type="submit" value="save" />
+        </form>
         <ul>
           {
             this.state.tasks.map((task, index) => {
