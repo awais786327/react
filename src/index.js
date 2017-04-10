@@ -12,6 +12,7 @@ class App extends React.Component {
     this.changeStatus = this.changeStatus.bind(this);
     this.onChange = this.onChange.bind(this);
     this.addTask = this.addTask.bind(this);
+    this.removeTask = this.removeTask.bind(this);
     this.state = {
       tasks : [
         {
@@ -47,12 +48,21 @@ class App extends React.Component {
     });
   }
 
+  removeTask(index){
+    var tasks = this.state.tasks;
+    tasks.splice(index, 1);
+
+    this.setState({
+      tasks: tasks
+    });
+  }
+
   addTask(ev){
     ev.preventDefault();
 
     let tasks = this.state.tasks;
     let value = this.state.value;
-    tasks.push({
+    tasks.unshift({
       name: value,
       completed: false
     });
@@ -85,14 +95,22 @@ class App extends React.Component {
         </div>
         <hr/>
         <form onSubmit={this.addTask}>
-          <input type="text" value={this.state.value}
+          <input type="text"
+                 value={this.state.value}
                  onChange={this.onChange}/>
           <input type="submit" value="save" />
         </form>
         <ul>
           {
             this.state.tasks.map((task, index) => {
-              return <ListItems key={task.name} task={task} index={index} clickHandler={this.changeStatus} />
+              return (
+                <ListItems
+                  key={task.name}
+                  removeTask={this.removeTask}
+                  task={task}
+                  index={index}
+                  clickHandler={this.changeStatus} />
+              )
             })
           }
         </ul>
