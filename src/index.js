@@ -10,7 +10,7 @@ class App extends React.Component {
     super();
 
     this.changeStatus = this.changeStatus.bind(this);
-    this.states = {
+    this.state = {
       tasks : [
         {
           name: 'buy book',
@@ -30,11 +30,12 @@ class App extends React.Component {
   }
 
   changeStatus(index){
-    var task = this.states.tasks[index];
+    var tasks = this.state.tasks;
+    var task = tasks[index];
     task.completed = !task.completed;
 
     this.setState({
-      tasks: task
+      tasks: tasks
     });
   }
 
@@ -48,7 +49,7 @@ class App extends React.Component {
         <hr/>
         <ul>
           {
-            this.states.tasks.map((task, index) => {
+            this.state.tasks.map((task, index) => {
               return <ListItems key={task.name} task={task} index={index} clickHandler={this.changeStatus} />
             })
           }
